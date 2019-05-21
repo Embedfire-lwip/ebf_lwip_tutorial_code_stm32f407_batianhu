@@ -778,9 +778,9 @@
               <FilePath>..\User\board.c</FilePath>
             </File>
             <File>
-              <FileName>iperf.c</FileName>
+              <FileName>iperf_client.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\iperf.c</FilePath>
+              <FilePath>..\User\iperf_client.c</FilePath>
             </File>
           </Files>
         </Group>

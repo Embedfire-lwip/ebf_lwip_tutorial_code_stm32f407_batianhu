@@ -30,16 +30,9 @@
  *
  */
 
-#ifndef LWIP_IPERF_H
-#define LWIP_IPERF_H
+#ifndef IPERF_CLIENT_H
+#define IPERF_CLIENT_H
 
+void iperf_client_init(void);
 
-#define TCP_SERVER_THREAD_NAME            "iperf_server"
-#define TCP_SERVER_THREAD_STACKSIZE        1024
-#define TCP_SERVER_THREAD_PRIO             4
-
-void tcpecho_init(void);
-
-void iperf_server(void *thread_param);
-
-#endif /* LWIP_IPERF_H */
+#endif /* IPERF_CLIENT_H */
