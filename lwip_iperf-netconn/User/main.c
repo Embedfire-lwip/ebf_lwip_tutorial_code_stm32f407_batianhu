@@ -84,6 +84,8 @@ int main(void)
   
   /* 开发板硬件初始化 */
   BSP_Init();
+
+//  tcpecho_init();
   
   /* 创建AppTaskCreate任务 */
   xReturn = xTaskCreate((TaskFunction_t )AppTaskCreate,  /* 任务入口函数 */
@@ -92,7 +94,6 @@ int main(void)
                         (void*          )NULL,/* 任务入口函数参数 */
                         (UBaseType_t    )2, /* 任务的优先级 */
                         (TaskHandle_t*  )&AppTaskCreate_Handle);/* 任务控制块指针 */ 
-
                         
   /* 启动任务调度 */           
   if(pdPASS == xReturn)
