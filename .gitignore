@@ -53,9 +53,13 @@ tmp/
 JLink*.*
 
 # Output directories
-Output
+#Output
 Lst
 Obj
+
+!/Output
+/Output/*
+!/Output/*.sct
 
 # cscope
 cscope.*
@@ -80,4 +84,4 @@ settings
 *.sim
 *.log
 *.ld
-
+/LwIP_F407
