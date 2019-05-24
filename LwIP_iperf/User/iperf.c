@@ -1,113 +1,3 @@
-///*
-// * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
-// * All rights reserved. 
-// * 
-// * Redistribution and use in source and binary forms, with or without modification, 
-// * are permitted provided that the following conditions are met:
-// *
-// * 1. Redistributions of source code must retain the above copyright notice,
-// *    this list of conditions and the following disclaimer.
-// * 2. Redistributions in binary form must reproduce the above copyright notice,
-// *    this list of conditions and the following disclaimer in the documentation
-// *    and/or other materials provided with the distribution.
-// * 3. The name of the author may not be used to endorse or promote products
-// *    derived from this software without specific prior written permission. 
-// *
-// * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-// * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-// * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
-// * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-// * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-// * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-// * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-// * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
-// * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
-// * OF SUCH DAMAGE.
-// *
-// * This file is part of the lwIP TCP/IP stack.
-// * 
-// * Author: Adam Dunkels <adam@sics.se>
-// *
-// */
-//#include "tcpecho.h"
-
-//#include "lwip/opt.h"
-
-//#if LWIP_NETCONN
-
-//#include "lwip/sys.h"
-//#include "lwip/api.h"
-///*-----------------------------------------------------------------------------------*/
-//static void 
-//tcpecho_thread(void *arg)
-//{
-//  struct netconn *conn, *newconn;
-//  err_t err;
-//  LWIP_UNUSED_ARG(arg);
-
-//  /* Create a new connection identifier. */
-//  /* Bind connection to well known port number 7. */
-//#if LWIP_IPV6
-//  conn = netconn_new(NETCONN_TCP_IPV6);
-//  netconn_bind(conn, IP6_ADDR_ANY, 7);
-//#else /* LWIP_IPV6 */
-//  conn = netconn_new(NETCONN_TCP);
-//  netconn_bind(conn, IP_ADDR_ANY, 7);
-//#endif /* LWIP_IPV6 */
-//  LWIP_ERROR("tcpecho: invalid conn", (conn != NULL), return;);
-
-//  /* Tell connection to go into listening mode. */
-//  netconn_listen(conn);
-
-//  while (1) {
-
-//    /* Grab new connection. */
-//    err = netconn_accept(conn, &newconn);
-//    /*printf("accepted new connection %p\n", newconn);*/
-//    /* Process the new connection. */
-//    if (err == ERR_OK) {
-//      struct netbuf *buf;
-//      void *data;
-//      u16_t len;
-//      
-//      while ((err = netconn_recv(newconn, &buf)) == ERR_OK) {
-//        /*printf("Recved\n");*/
-//        do {
-////             netbuf_data(buf, &data, &len);
-////             err = netconn_write(newconn, data, len, 1);
-//#if 0
-//            if (err != ERR_OK) {
-//              printf("tcpecho: netconn_write: error \"%s\"\n", lwip_strerr(err));
-//            }
-//#endif
-//        } while (netbuf_next(buf) >= 0);
-//        netbuf_delete(buf);
-//      }
-//      /*printf("Got EOF, looping\n");*/ 
-//      /* Close connection and discard connection identifier. */
-////      netconn_close(newconn);
-////      netconn_delete(newconn);
-//    }
-////    printf("tcpecho_thread run\n");
-//  }
-//}
-
-
-
-
-///*-----------------------------------------------------------------------------------*/
-//void
-//tcpecho_init(void)
-//{
-//  sys_thread_new(TCP_SERVER_THREAD_NAME, tcpecho_thread, NULL, TCP_SERVER_THREAD_STACKSIZE, TCP_SERVER_THREAD_PRIO);
-//}
-///*-----------------------------------------------------------------------------------*/
-
-//#endif /* LWIP_NETCONN */
-/**
-* iperf-liked network performance tool
-*
-*/
 
  /* FreeRTOS头文件 */
 #include "FreeRTOS.h"
@@ -129,7 +19,6 @@
 #include "lwip/sys.h"
 #include "lwip/api.h"
 
-#define IPERF_PORT          5001
 #define IPERF_BUFSZ         (4 * 1024)
 
 #define IPERF_MODE_STOP     0
@@ -143,7 +32,7 @@ typedef struct
     char *host;
     int port;
 } IPERF_PARAM;
-static IPERF_PARAM param = {IPERF_MODE_SERVER, NULL, IPERF_PORT};
+static IPERF_PARAM param = {IPERF_MODE_SERVER, NULL, LOCAL_PORT};
 
 static void iperf_client(void *thread_param)
 {
@@ -238,11 +127,11 @@ void iperf_server(void *thread_param)
 {
     uint8_t *recv_data;
     socklen_t sin_size;
-    uint32_t tick1, tick2;
+//    uint32_t tick1, tick2;
     int sock = -1, connected, bytes_received;
     uint64_t recvlen;
     struct sockaddr_in server_addr, client_addr;
-    char speed[32] = { 0 };
+//    char speed[32] = { 0 };
     fd_set readset;
     struct timeval timeout;
 
@@ -264,7 +153,9 @@ void iperf_server(void *thread_param)
     server_addr.sin_port = htons(param.port);
     server_addr.sin_addr.s_addr = INADDR_ANY;
     memset(&(server_addr.sin_zero), 0x0, sizeof(server_addr.sin_zero));
-
+    
+    printf("本地端口号是%d\n",LOCAL_PORT);
+    
     if (bind(sock, (struct sockaddr *)&server_addr, sizeof(struct sockaddr)) == -1)
     {
         printf("Unable to bind\n");
@@ -307,7 +198,7 @@ void iperf_server(void *thread_param)
         }
 
         recvlen = 0;
-        tick1 = xTaskGetTickCount();
+//        tick1 = xTaskGetTickCount();
         while (param.mode != IPERF_MODE_STOP)
         {
             bytes_received = recv(connected, recv_data, IPERF_BUFSZ, 0);
@@ -315,18 +206,22 @@ void iperf_server(void *thread_param)
 
             recvlen += bytes_received;
 
-            tick2 = xTaskGetTickCount();
-            if (tick2 - tick1 >= configTICK_RATE_HZ * 5)
-            {
-                float f;
+//            tick2 = xTaskGetTickCount();
+//            if (tick2 - tick1 >= configTICK_RATE_HZ * 5)
+//            {
+//                float f;
 
-                f = (float)(recvlen * configTICK_RATE_HZ / 125 / (tick2 - tick1));
-                f /= 1000.0f;
-                snprintf(speed, sizeof(speed), "%.4f Mbps!\n", f);
-                printf("%s", speed);
-                tick1 = tick2;
-                recvlen = 0;
-            }
+//                f = (float)(recvlen * configTICK_RATE_HZ / 125 / (tick2 - tick1));
+//                f /= 1000.0f;
+//                
+////              taskENTER_CRITICAL();
+//              snprintf(speed, sizeof(speed), "%.4f Mbps!\n", f);
+//              printf("%s", speed);
+////              taskEXIT_CRITICAL();   
+//              
+//                tick1 = tick2;
+//                recvlen = 0;
+//            }
         }
 
         if (connected >= 0) closesocket(connected);
@@ -363,7 +258,7 @@ int iperf(int argc, char **argv)
 {
     int mode = 0; /* server mode */
     char *host = NULL;
-    int port = IPERF_PORT;
+    int port = LOCAL_PORT;
 
     if (argc == 1) goto __usage;
     else

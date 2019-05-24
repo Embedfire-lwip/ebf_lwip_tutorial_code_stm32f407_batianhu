@@ -41,7 +41,7 @@
 
 #include <string.h>
 
-#define RECV_BUFSZ      100
+#define RECV_BUFSZ      300
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -63,13 +63,17 @@ dns_thread(void *arg)
   /* Bind connection to well known port number 5001. */
 #if LWIP_IPV6
   conn = netconn_new(NETCONN_TCP_IPV6);
-  netconn_bind(conn, IP6_ADDR_ANY, 5001);
+  netconn_bind(conn, IP6_ADDR_ANY, LOCAL_PORT);
 #else /* LWIP_IPV6 */
   conn = netconn_new(NETCONN_TCP);
-  netconn_bind(conn, IP_ADDR_ANY, 5001);
+  netconn_bind(conn, IP_ADDR_ANY, LOCAL_PORT);
 #endif /* LWIP_IPV6 */
   LWIP_ERROR("tcpecho: invalid conn", (conn != NULL), return;);
-
+  
+  printf("请在电脑上位机软件中将电脑设置为client，连接到开发板上...\n\n");
+  printf("请将电脑上位机设置为TCP Client.并且连接到开发板,开发板IP地址是:%d.%d.%d.%d \t 端口号:%d\n\n",\
+          IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3,LOCAL_PORT);
+  
   /* Tell connection to go into listening mode. */
   netconn_listen(conn);
 
@@ -84,6 +88,11 @@ dns_thread(void *arg)
       void *data;
       u16_t len;
       
+      sprintf(recvbuf,"连接成功...请发送一个域名进行dns解析...\n\n");
+      printf("%s",recvbuf);
+
+      netconn_write(newconn, recvbuf, strlen(recvbuf), NETCONN_COPY);
+
       while ((err = netconn_recv(newconn, &buf)) == ERR_OK) {
         do {
              netbuf_data(buf, &data, &len);
@@ -115,6 +124,7 @@ dns_thread(void *arg)
       /* Close connection and discard connection identifier. */
       netconn_close(newconn);
       netconn_delete(newconn);
+      printf("连接已断开....\n\n");
     }
   }
 }

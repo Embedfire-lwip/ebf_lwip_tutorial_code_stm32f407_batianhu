@@ -53,7 +53,7 @@ void httpserver_send_html(struct netconn *conn, bool led_status)
      netconn_write(conn, Led1On_Data, sizeof(Led1On_Data)-1, NETCONN_NOCOPY);
 	else
 	  netconn_write(conn, Led1Off_Data, sizeof(Led1Off_Data)-1, NETCONN_NOCOPY);
-  
+//  
   netconn_write(conn, http_index_html, sizeof(http_index_html)-1, NETCONN_NOCOPY);
 
 }
@@ -92,9 +92,11 @@ static void httpserver_serve(struct netconn *conn)
 		if(buf[6]=='o'&&buf[7]=='n'){		//请求打开LED
 		    led_on = TRUE;
         LED1_ON;
+        PRINT_DEBUG("LED ON!\n");
 		}else if(buf[6]=='o'&&buf[7]=='f'&&buf[8]=='f'){	//请求关闭LED
 		    led_on = FALSE;
          LED1_OFF;
+        PRINT_DEBUG("LED OFF!\n");
 	    }
 
 		httpserver_send_html(conn, led_on);
@@ -125,7 +127,7 @@ httpserver_thread(void *arg)
   LED1_ON;
   
   /* Bind to port 80 (HTTP) with default IP address */
-  netconn_bind(conn, NULL, 80);
+  netconn_bind(conn, NULL, LOCAL_PORT);
   
   /* Put the connection into LISTEN state */
   netconn_listen(conn);

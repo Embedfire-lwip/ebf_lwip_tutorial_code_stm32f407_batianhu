@@ -89,10 +89,6 @@ int main(void)
   /* 开发板硬件初始化 */
   BSP_Init();
   
-  
-  
-//  tcpecho_init();
-  
   /* 创建AppTaskCreate任务 */
   xReturn = xTaskCreate((TaskFunction_t )AppTaskCreate,  /* 任务入口函数 */
                         (const char*    )"AppTaskCreate",/* 任务名字 */
@@ -124,6 +120,21 @@ static void AppTaskCreate(void)
 
   httpserver_init();
   
+  printf("本例程演示开发板做http服务器\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，电脑浏览器作为TCP Client ，开发板作为TCP Server\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第20章 HTTP 服务器\n\n");
+   
+  printf("打开电脑的浏览器，输入开发板的IP地址(如192.168.0.122)，按下回车即可\n\n");
+  
+  printf("通过浏览器的LED控制按钮控制开发板的LED灯\n\n");
+  
+
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建Test1_Task任务 */
@@ -178,7 +189,7 @@ static void Test2_Task(void* parameter)
 {	 
   while (1)
   {
-//    LED2_TOGGLE;
+    LED2_TOGGLE;
 //    PRINT_DEBUG("LED2_TOGGLE\n");
     vTaskDelay(2000);/* 延时2000个tick */
   }

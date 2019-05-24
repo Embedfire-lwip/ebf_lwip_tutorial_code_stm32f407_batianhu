@@ -39,7 +39,10 @@
 //将内存定义在SDRAM上
 uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] __EXRAM;
 
-
+//定义数组到SDRAM
+uint8_t testGrup[3] __EXRAM ={1,2,3};
+//定义数组到SRAM
+uint8_t testGrup2[3] ={1,2,3};
 /**************************** 任务句柄 ********************************/
 /* 
  * 任务句柄是一个指针，用于指向一个任务，当任务创建好之后，它就具有了一个任务句柄
@@ -129,6 +132,16 @@ static void AppTaskCreate(void)
   BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
 //  Netif_Config();
   TCPIP_Init();
+  
+  printf("本例程演示开发板获取网页数据\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，开发板作为TCP Server\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第19章 HTTP 协议\n\n");
   
   client_init();
   

@@ -85,3 +85,4 @@ settings
 *.log
 *.ld
 /LwIP_F407
+LwIP_iperf_socket

@@ -36,7 +36,6 @@
 #include "lwip/sys.h"
 #include "lwip/api.h"
 
-#define IPERF_PORT          5001
 #define IPERF_BUFSZ         (4 * 1024)
 
 
@@ -55,7 +54,14 @@ static void iperf_client(void *thread_param)
   u32_t tick1, tick2;
   ip4_addr_t ipaddr;
 
-
+  printf("目地IP地址:%d.%d.%d.%d \t 端口号:%d\n\n",      \
+          DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3,DEST_PORT);
+  
+  printf("请将电脑上位机设置为TCP Server.在User/arch/sys_arch.h文件中将目标IP地址修改为您电脑上的IP地址\n\n");
+  
+  printf("修改对应的宏定义:DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3,DEST_PORT\n\n");
+  
+  
   send_buf = (uint8_t *) pvPortMalloc(IPERF_BUFSZ);
   if (!send_buf) return ;
 
@@ -72,9 +78,9 @@ static void iperf_client(void *thread_param)
       continue;
     }
     
-    IP4_ADDR(&ipaddr,192,168,0,181);
+    IP4_ADDR(&ipaddr,DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3);
     
-    ret = netconn_connect(conn,&ipaddr,5001);
+    ret = netconn_connect(conn,&ipaddr,DEST_PORT);
     if (ret == -1)
     {
         printf("Connect failed!\n");
@@ -100,7 +106,7 @@ static void iperf_client(void *thread_param)
         tick1 = tick2;
         sentlen = 0;
       }
-      ret = netconn_write(conn,send_buf,IPERF_BUFSZ,0);
+      ret = netconn_write(conn,send_buf,IPERF_BUFSZ,1);
       if (ret == ERR_OK)
       {
           sentlen += IPERF_BUFSZ;
@@ -115,5 +121,5 @@ static void iperf_client(void *thread_param)
 void
 iperf_client_init(void)
 {
-  sys_thread_new("iperf_client", iperf_client, NULL, 512, 4);
+  sys_thread_new("iperf_client", iperf_client, NULL, 1024, 4);
 }

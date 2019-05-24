@@ -121,6 +121,16 @@ static void AppTaskCreate(void)
   TCPIP_Init();
   dhcp_netconn_init();
   
+  printf("本例程演示开发板动态获取IP地址,再演示开发板发送数据到服务器\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，电脑作为TCP Server，开发板作为TCP Client\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+  
+  printf("本例程在书上并未写入,无参考资料!\n\n");
+  
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建Test1_Task任务 */

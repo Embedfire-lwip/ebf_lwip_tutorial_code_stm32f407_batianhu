@@ -49,13 +49,15 @@ tcpecho_thread(void *arg)
   /* Bind connection to well known port number 7. */
 #if LWIP_IPV6
   conn = netconn_new(NETCONN_TCP_IPV6);
-  netconn_bind(conn, IP6_ADDR_ANY, 5001);
+  netconn_bind(conn, IP6_ADDR_ANY, LOCAL_PORT);
 #else /* LWIP_IPV6 */
   conn = netconn_new(NETCONN_TCP);
-  netconn_bind(conn, IP_ADDR_ANY, 5001);
+  netconn_bind(conn, IP_ADDR_ANY, LOCAL_PORT);
 #endif /* LWIP_IPV6 */
   LWIP_ERROR("tcpecho: invalid conn", (conn != NULL), return;);
 
+  printf("本地端口号是%d\n\n",LOCAL_PORT);
+  
   /* Tell connection to go into listening mode. */
   netconn_listen(conn);
 

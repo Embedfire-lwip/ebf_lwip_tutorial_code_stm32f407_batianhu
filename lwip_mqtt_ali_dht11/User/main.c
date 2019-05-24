@@ -132,12 +132,38 @@ static void AppTaskCreate(void)
   
   mqtt_thread_init();
 
+  printf("本例程使用开发板接入阿里云，并且上报温湿度数据\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n 路由器必须能连接到外网(能上网)\n\n");
+  
+  printf("实验中使用MQTT协议传输数据(依赖TCP协议) ，开发板作为MQTT Client\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第23章 连接到阿里云物联\n\n");
+   
+  printf("在开发板的dht11接口接上DHT11温湿度传感器\n\n");  
+  
+  printf("基本信息(根据在阿里云创建的设备进行修改，具体参考书籍第23章 连接到阿里云物联)\n\n");
+  
+  printf("阿里云域名/IP地址 : %s \t 端口号 : %d \n\n",HOST_NAME,HOST_PORT);  
+  
+  printf("阿里云CLIENT_ID : %s\n\n",CLIENT_ID); 
+  
+  printf("阿里云USER_NAME : %s\n\n",USER_NAME); 
+  
+  printf("阿里云PASSWORD : %s\n\n",PASSWORD);  
+  
+  printf("阿里云TOPIC : %s\n\n",TOPIC);  
+  
+  printf("阿里云TEST_MESSAGE : %s\n\n",TEST_MESSAGE);  
+  
   taskENTER_CRITICAL();           //进入临界区
  
   /* 创建Test1_Task任务 */
   xReturn = xTaskCreate((TaskFunction_t )Test1_Task, /* 任务入口函数 */
                         (const char*    )"Test1_Task",/* 任务名字 */
-                        (uint16_t       )512,   /* 任务栈大小 */
+                        (uint16_t       )1024,   /* 任务栈大小 */
                         (void*          )NULL,	/* 任务入口函数参数 */
                         (UBaseType_t    )2,	    /* 任务的优先级 */
                         (TaskHandle_t*  )&Test1_Task_Handle);/* 任务控制块指针 */
@@ -170,7 +196,6 @@ static void AppTaskCreate(void)
 static void Test1_Task(void* parameter)
 {	
   uint8_t res;
-  BaseType_t xReturn = pdPASS;
   //系统延时初始化
   CPU_TS_TmrInit();
   //DHT11初始化
@@ -184,14 +209,10 @@ static void Test1_Task(void* parameter)
     send_data = &DHT11_Data;
     if(SUCCESS == res)
     {
-//      printf("humidity = %f , temperature = %f\n",
-//             DHT11_Data.humidity,DHT11_Data.temperature);
-//      printf("发送消息send_data1！\n");
-      xReturn = xQueueSend( MQTT_Data_Queue, /* 消息队列的句柄 */
+
+      xQueueSend( MQTT_Data_Queue, /* 消息队列的句柄 */
                             &send_data,/* 发送的消息内容 */
                             0 );        /* 等待时间 0 */
-//      if(xReturn == pdTRUE)
-//        PRINT_DEBUG("发送消息数据成功\n");
     }
 
     LED1_TOGGLE;

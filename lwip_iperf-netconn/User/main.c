@@ -28,13 +28,6 @@
 
 #include "iperf.h"
 
-/**************************** 任务句柄 ********************************/
-/* 
- * 任务句柄是一个指针，用于指向一个任务，当任务创建好之后，它就具有了一个任务句柄
- * 以后我们要想操作这个任务都需要通过这个任务句柄，如果是自身的任务操作自己，那么
- * 这个句柄可以为NULL。
- */
-static TaskHandle_t AppTaskCreate_Handle = NULL;/* 创建任务句柄 */
 
 
 /********************************** 内核对象句柄 *********************************/
@@ -66,7 +59,6 @@ static TaskHandle_t AppTaskCreate_Handle = NULL;/* 创建任务句柄 */
 *                             函数声明
 *************************************************************************
 */
-static void AppTaskCreate(void);/* 用于创建任务 */
 
 extern void TCPIP_Init(void);
 
@@ -85,15 +77,21 @@ int main(void)
   /* 开发板硬件初始化 */
   BSP_Init();
 
-//  tcpecho_init();
+  TCPIP_Init();
   
-  /* 创建AppTaskCreate任务 */
-  xReturn = xTaskCreate((TaskFunction_t )AppTaskCreate,  /* 任务入口函数 */
-                        (const char*    )"AppTaskCreate",/* 任务名字 */
-                        (uint16_t       )512,  /* 任务栈大小 */
-                        (void*          )NULL,/* 任务入口函数参数 */
-                        (UBaseType_t    )2, /* 任务的优先级 */
-                        (TaskHandle_t*  )&AppTaskCreate_Handle);/* 任务控制块指针 */ 
+  printf("本例程对使用jperf软件对开发板进行测试接收速度\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，电脑作为TCP Client ，开发板作为TCP Server\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第18章 使用 JPerf 工具测试网速\n\n");
+   
+  printf("打开jperf软件，输入开发板的IP地址与端口号，然后开始测速\n\n");  
+  
+  iperf_server_init();
                         
   /* 启动任务调度 */           
   if(pdPASS == xReturn)
@@ -103,27 +101,6 @@ int main(void)
   
   while(1);   /* 正常不会执行到这里 */    
 }
-
-
-/***********************************************************************
-  * @ 函数名  ： AppTaskCreate
-  * @ 功能说明： 为了方便管理，所有的任务创建函数都放在这个函数里面
-  * @ 参数    ： 无  
-  * @ 返回值  ： 无
-  **********************************************************************/
-static void AppTaskCreate(void)
-{
-  TCPIP_Init();
-  
-  iperf_server_init();
-  
-  taskENTER_CRITICAL();           //进入临界区
-  
-  vTaskDelete(AppTaskCreate_Handle); //删除AppTaskCreate任务
-  
-  taskEXIT_CRITICAL();            //退出临界区
-}
-
 
 
 /********************************END OF FILE****************************/

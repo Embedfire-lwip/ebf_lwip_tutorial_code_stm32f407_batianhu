@@ -40,7 +40,6 @@
 #include "lwip/api.h"
 /*-----------------------------------------------------------------------------------*/
 
-#define PORT              5001
 #define RECV_DATA         (1024)
 
 
@@ -52,6 +51,8 @@ tcpecho_thread(void *arg)
   struct sockaddr_in server_addr,client_addr;
   socklen_t sin_size;
   int recv_data_len;
+  
+  printf("本地端口号是%d\n\n",LOCAL_PORT);
   
   recv_data = (char *)pvPortMalloc(RECV_DATA);
   if (recv_data == NULL)
@@ -69,7 +70,7 @@ tcpecho_thread(void *arg)
   
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = INADDR_ANY;
-  server_addr.sin_port = htons(PORT);
+  server_addr.sin_port = htons(LOCAL_PORT);
   memset(&(server_addr.sin_zero), 0, sizeof(server_addr.sin_zero));
   
   if (bind(sock, (struct sockaddr *)&server_addr, sizeof(struct sockaddr)) == -1)

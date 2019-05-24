@@ -40,7 +40,6 @@
 #include <lwip/sockets.h>
 #include "./sdram/bsp_sdram.h"  
 
-#define PORT            80
 #define IP_ADDR        "114.215.151.106"
 
 #ifdef    LWIP_DNS
@@ -85,6 +84,8 @@ static void client(void *thread_param)
     host_ip = HOST_NAME;
 #endif  
   
+  printf("目标端口号是：%d\n\n",DEST_PORT);
+  
   while(1)
   {
     sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -96,7 +97,7 @@ static void client(void *thread_param)
     } 
 
     client_addr.sin_family = AF_INET;      
-    client_addr.sin_port = htons(PORT);   
+    client_addr.sin_port = htons(DEST_PORT);   
     client_addr.sin_addr.s_addr = inet_addr(host_ip);
     memset(&(client_addr.sin_zero), 0, sizeof(client_addr.sin_zero));    
 

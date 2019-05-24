@@ -50,15 +50,10 @@ void LwIP_Init(void)
 {
   /* IP addresses initialization */
   /* USER CODE BEGIN 0 */
-#ifdef USE_DHCP
-  ip_addr_set_zero_ip4(&ipaddr);
-  ip_addr_set_zero_ip4(&netmask);
-  ip_addr_set_zero_ip4(&gw);
-#else
   IP4_ADDR(&ipaddr,IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
   IP4_ADDR(&netmask,NETMASK_ADDR0,NETMASK_ADDR1,NETMASK_ADDR2,NETMASK_ADDR3);
   IP4_ADDR(&gw,GW_ADDR0,GW_ADDR1,GW_ADDR2,GW_ADDR3);
-#endif /* USE_DHCP */
+  
   /* USER CODE END 0 */
     
   /* Initilialize the LwIP stack without RTOS */
@@ -82,7 +77,11 @@ void LwIP_Init(void)
   }
 
 /* USER CODE BEGIN 3 */
-
+  printf("本地IP地址是:%ld.%ld.%ld.%ld\n\n",  \
+        ((gnetif.ip_addr.addr)&0x000000ff),       \
+        (((gnetif.ip_addr.addr)&0x0000ff00)>>8),  \
+        (((gnetif.ip_addr.addr)&0x00ff0000)>>16), \
+        ((gnetif.ip_addr.addr)&0xff000000)>>24);
 /* USER CODE END 3 */
 }
 
@@ -92,6 +91,20 @@ int main(void)
 {
   //板级外设初始化
   BSP_Init();
+  
+  printf("本例程演示UDP回显实验,电脑发送数据到开发板,开发板将数据返回到电脑上\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用UDP协议传输数据,UDP协议是无连接协议\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>> 使用 RAW API 接口编程\n\n");
+  
+  printf("请将电脑上位机设置为UDP协议.输入开发板的IP地址(如192.168.0.122)\n\n");  
+  
+  printf("如需修改IP地址与端口号，则修改对应的宏定义:IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3,LOCAL_PORT\n\n");  
   
   //LwIP协议栈初始化
   LwIP_Init();  

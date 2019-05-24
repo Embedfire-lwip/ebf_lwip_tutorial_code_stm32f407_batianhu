@@ -38,16 +38,23 @@
 
 #include <lwip/sockets.h>
 
-#define PORT              5001
-#define IP_ADDR        "192.168.0.181"
-
 static void client(void *thread_param)
 {
   int sock = -1;
   struct sockaddr_in client_addr;
   
+  ip4_addr_t ipaddr;
+  
   uint8_t send_buf[]= "This is a TCP Client test...\n";
   
+  printf("目地IP地址:%d.%d.%d.%d \t 端口号:%d\n\n",      \
+          DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3,DEST_PORT);
+  
+  printf("请将电脑上位机设置为TCP Server.在User/arch/sys_arch.h文件中将目标IP地址修改为您电脑上的IP地址\n\n");
+  
+  printf("修改对应的宏定义:DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3,DEST_PORT\n\n");
+  
+  IP4_ADDR(&ipaddr,DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3);
   while(1)
   {
     sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -59,8 +66,8 @@ static void client(void *thread_param)
     } 
 
     client_addr.sin_family = AF_INET;      
-    client_addr.sin_port = htons(PORT);   
-    client_addr.sin_addr.s_addr = inet_addr(IP_ADDR);
+    client_addr.sin_port = htons(DEST_PORT);   
+    client_addr.sin_addr.s_addr = ipaddr.addr;
     memset(&(client_addr.sin_zero), 0, sizeof(client_addr.sin_zero));    
 
     if (connect(sock, 
@@ -73,7 +80,7 @@ static void client(void *thread_param)
         continue;
     }                                           
     
-    printf("Connect to iperf server successful!\n");
+    printf("Connect to server successful!\n");
     
     while (1)
     {

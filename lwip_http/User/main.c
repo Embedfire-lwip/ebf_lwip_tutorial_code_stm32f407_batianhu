@@ -124,6 +124,18 @@ static void AppTaskCreate(void)
 
   http_server_netconn_init();
   
+  printf("本例程演示开发板做http服务器\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，电脑浏览器作为TCP Client ，开发板作为TCP Server\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第20章 HTTP 服务器\n\n");
+   
+  printf("打开电脑的浏览器，输入开发板的IP地址(如192.168.0.122)，按下回车即可\n\n");
+  
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建Test1_Task任务 */
@@ -135,7 +147,7 @@ static void AppTaskCreate(void)
                         (TaskHandle_t*  )&Test1_Task_Handle);/* 任务控制块指针 */
   if(pdPASS == xReturn)
     printf("Create Test1_Task sucess...\r\n");
-  
+//  
   /* 创建Test2_Task任务 */
   xReturn = xTaskCreate((TaskFunction_t )Test2_Task,  /* 任务入口函数 */
                         (const char*    )"Test2_Task",/* 任务名字 */

@@ -38,7 +38,6 @@
 #include "lwip/api.h"
 #include "lwip/sys.h"
 
-#define PORT              5001
 #define RECV_DATA         (1024)
 
 /*-----------------------------------------------------------------------------------*/
@@ -50,6 +49,8 @@ udpecho_thread(void *arg)
   struct sockaddr_in udp_addr,seraddr;
   int recv_data_len;
   socklen_t addrlen;
+  
+  printf("本地端口号是%d\n\n",LOCAL_PORT);
   
   while(1)
   {
@@ -69,7 +70,7 @@ udpecho_thread(void *arg)
     
     udp_addr.sin_family = AF_INET;
     udp_addr.sin_addr.s_addr = INADDR_ANY;
-    udp_addr.sin_port = htons(PORT);
+    udp_addr.sin_port = htons(LOCAL_PORT);
     memset(&(udp_addr.sin_zero), 0, sizeof(udp_addr.sin_zero));
     
     if (bind(sock, (struct sockaddr *)&udp_addr, sizeof(struct sockaddr)) == -1)

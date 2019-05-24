@@ -51,13 +51,15 @@ udpecho_thread(void *arg)
 
 #if LWIP_IPV6
   conn = netconn_new(NETCONN_UDP_IPV6);
-  netconn_bind(conn, IP6_ADDR_ANY, 5001);
+  netconn_bind(conn, IP6_ADDR_ANY, LOCAL_PORT);
 #else /* LWIP_IPV6 */
   conn = netconn_new(NETCONN_UDP);
-  netconn_bind(conn, IP_ADDR_ANY, 5001);
+  netconn_bind(conn, IP_ADDR_ANY, LOCAL_PORT);
 #endif /* LWIP_IPV6 */
   LWIP_ERROR("udpecho: invalid conn", (conn != NULL), return;);
-
+  
+  printf("本地端口号是:%d\n\n",LOCAL_PORT);
+  
   while (1) {
     err = netconn_recv(conn, &buf);
     if (err == ERR_OK) {

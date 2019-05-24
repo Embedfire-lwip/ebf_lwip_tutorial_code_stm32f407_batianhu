@@ -77,10 +77,10 @@ http_server_netconn_thread(void *arg)
   /* Bind to port 80 (HTTP) with default IP address */
 #if LWIP_IPV6
   conn = netconn_new(NETCONN_TCP_IPV6);
-  netconn_bind(conn, IP6_ADDR_ANY, 80);
+  netconn_bind(conn, IP6_ADDR_ANY, LOCAL_PORT);
 #else /* LWIP_IPV6 */
   conn = netconn_new(NETCONN_TCP);
-  netconn_bind(conn, IP_ADDR_ANY, 80);
+  netconn_bind(conn, IP_ADDR_ANY, LOCAL_PORT);
 #endif /* LWIP_IPV6 */
   LWIP_ERROR("http_server: invalid conn", (conn != NULL), return;);
   
@@ -105,7 +105,7 @@ http_server_netconn_thread(void *arg)
 void
 http_server_netconn_init(void)
 {
-  sys_thread_new("http_server_netconn", http_server_netconn_thread, NULL, 2048, 4);
+  sys_thread_new("http_server_netconn", http_server_netconn_thread, NULL, 1024, 4);
 }
 
 #endif /* LWIP_NETCONN*/

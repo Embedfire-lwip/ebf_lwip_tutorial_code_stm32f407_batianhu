@@ -120,6 +120,20 @@ static void AppTaskCreate(void)
 
   udpecho_init();
   
+  printf("本例程演示UDP回显实验,电脑发送数据到开发板,开发板将数据返回到电脑上\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用UDP协议传输数据,UDP协议是无连接协议\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>> 使用 NETCONN 接口编程\n\n");
+  
+  printf("请将电脑上位机设置为UDP协议.输入开发板的IP地址(如192.168.0.122)\n\n");  
+  
+  printf("如需修改IP地址与端口号，则修改对应的宏定义:IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3,LOCAL_PORT\n\n");  
+   
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建Test1_Task任务 */

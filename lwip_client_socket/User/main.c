@@ -118,6 +118,17 @@ static void AppTaskCreate(void)
 
   client_init();
   
+  printf("本例程演示开发板发送数据到服务器\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，电脑作为TCP Server，开发板作为TCP Client\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第15章 使用 NETCONN 接口编程\n\n");
+  
+  
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建Test1_Task任务 */
@@ -128,7 +139,7 @@ static void AppTaskCreate(void)
                         (UBaseType_t    )1,	    /* 任务的优先级 */
                         (TaskHandle_t*  )&Test1_Task_Handle);/* 任务控制块指针 */
   if(pdPASS == xReturn)
-    printf("Create Test1_Task sucess...\r\n");
+    PRINT_DEBUG("Create Test1_Task sucess...\r\n");
   
   /* 创建Test2_Task任务 */
   xReturn = xTaskCreate((TaskFunction_t )Test2_Task,  /* 任务入口函数 */
@@ -138,7 +149,7 @@ static void AppTaskCreate(void)
                         (UBaseType_t    )2, /* 任务的优先级 */
                         (TaskHandle_t*  )&Test2_Task_Handle);/* 任务控制块指针 */ 
   if(pdPASS == xReturn)
-    printf("Create Test2_Task sucess...\n\n");
+    PRINT_DEBUG("Create Test2_Task sucess...\n\n");
   
   vTaskDelete(AppTaskCreate_Handle); //删除AppTaskCreate任务
   

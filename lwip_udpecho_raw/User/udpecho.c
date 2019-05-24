@@ -7,7 +7,7 @@
 #include "lwip/udp.h"
 #include "lwip/pbuf.h"
 #include <stdio.h>	
-
+#include <string.h>	
 
 static void udp_demo_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port)
 {

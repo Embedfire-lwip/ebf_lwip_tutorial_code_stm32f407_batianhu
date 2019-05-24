@@ -16,7 +16,6 @@
 #include "lwip/sys.h"
 #include "lwip/api.h"
 
-#define IPERF_PORT          5001
 #define IPERF_BUFSZ         (4 * 1024)
 
 void iperf_server(void *thread_param)
@@ -32,8 +31,9 @@ void iperf_server(void *thread_param)
   }
 
   conn = netconn_new(NETCONN_TCP);
-  netconn_bind(conn, IP_ADDR_ANY, 5001);
-  
+  netconn_bind(conn, IP_ADDR_ANY, LOCAL_PORT);
+    
+  printf("本地端口号是%d\n",LOCAL_PORT);
   LWIP_ERROR("tcpecho: invalid conn", (conn != NULL), return;);
 
   /* Tell connection to go into listening mode. */
@@ -69,6 +69,6 @@ void iperf_server(void *thread_param)
 void
 iperf_server_init(void)
 {
-  sys_thread_new("iperf_server", iperf_server, NULL, 1024, 4);
+  sys_thread_new("iperf_server", iperf_server, NULL, 2048, 4);
 }
 

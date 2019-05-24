@@ -131,13 +131,45 @@ static void AppTaskCreate(void)
   TCPIP_Init();
   
   mqtt_thread_init();
-
+  
+  printf("本例程使用开发板接入OneNET ，并且上报温湿度数据\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n 路由器必须能连接到外网(能上网)\n\n");
+  
+  printf("实验中使用MQTT协议传输数据(依赖TCP协议) ，开发板作为MQTT Client\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第23章 连接到OneNET 物联\n\n");
+   
+  printf("在开发板的dht11接口接上DHT11温湿度传感器\n\n");  
+  
+  printf("基本信息(根据在OneNET 创建的设备进行修改，具体参考书籍第24章 连接到OneNET)\n\n");
+  
+  printf("OneNET 域名/IP地址 : %s \t 端口号 : %d \n\n",HOST_NAME,HOST_PORT);  
+  
+  printf("OneNET CLIENT_ID : %s\n\n",CLIENT_ID); 
+  
+  printf("OneNET USER_NAME : %s\n\n",USER_NAME); 
+  
+  printf("OneNET PASSWORD : %s\n\n",PASSWORD);  
+  
+  printf("OneNET TOPIC : %s\n\n",TOPIC);  
+  
+  printf("OneNET TEST_MESSAGE : %s\n\n",TEST_MESSAGE);  
+  
+  printf("由于本例程是提交到dp主题的，因此串口无输出内容\n\n");  
+  
+  printf("需要观看本实验现象,请在浏览器打开次连接：https://open.iot.10086.cn/iotbox/appsquare/appview?openid=c673cc3ee3e436d298494aba2e5c08b8\n\n");
+  
+  printf("由于本例程是对所有人开放,如果同时有人使用这个例程连接到OneNET的话,服务器将会断开已经连接的客户端,而非例程错误,请悉知\n\n");
+  
   taskENTER_CRITICAL();           //进入临界区
  
   /* 创建Test1_Task任务 */
   xReturn = xTaskCreate((TaskFunction_t )Test1_Task, /* 任务入口函数 */
                         (const char*    )"Test1_Task",/* 任务名字 */
-                        (uint16_t       )512,   /* 任务栈大小 */
+                        (uint16_t       )1024,   /* 任务栈大小 */
                         (void*          )NULL,	/* 任务入口函数参数 */
                         (UBaseType_t    )2,	    /* 任务的优先级 */
                         (TaskHandle_t*  )&Test1_Task_Handle);/* 任务控制块指针 */
@@ -170,7 +202,6 @@ static void AppTaskCreate(void)
 static void Test1_Task(void* parameter)
 {	
   uint8_t res;
-  BaseType_t xReturn = pdPASS;
   //系统延时初始化
   CPU_TS_TmrInit();
   //DHT11初始化
@@ -184,14 +215,9 @@ static void Test1_Task(void* parameter)
     send_data = &DHT11_Data;
     if(SUCCESS == res)
     {
-//      PRINT_DEBUG("humidity = %f , temperature = %f\n",
-//             DHT11_Data.humidity,DHT11_Data.temperature);
-//      PRINT_DEBUG("发送消息send_data1！\n");
-      xReturn = xQueueSend( MQTT_Data_Queue, /* 消息队列的句柄 */
+      xQueueSend( MQTT_Data_Queue, /* 消息队列的句柄 */
                             &send_data,/* 发送的消息内容 */
                             0 );        /* 等待时间 0 */
-//      if(xReturn == pdTRUE)
-//        PRINT_DEBUG("发送消息数据成功\n");
     }
 
     LED1_TOGGLE;

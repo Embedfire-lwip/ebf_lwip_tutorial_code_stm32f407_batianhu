@@ -571,7 +571,7 @@ int32_t MQTTMsgPublish2dp(int32_t sock, int8_t qos, int8_t type,uint8_t* msg)
         default:
           goto publish2dpfail;
       }
-      *(uint8_t*)&q[0] = 0x03;
+//      *(uint8_t*)&q[0] = 0x03;
       *(uint8_t*)&q[1] = ((msg_len)&0xff00)>>8;
       *(uint8_t*)&q[2] = (msg_len)&0xff;
       memcpy((uint8_t*)(&q[3]),(uint8_t*)msg,msg_len);
@@ -713,7 +713,7 @@ MQTT_SEND_START:
             //更新数据成功，
             char* p = cJSON_Print(cJSON_Data);
             //发布消息到'$dp'系统主题
-           ret = MQTTMsgPublish2dp(MQTT_Socket,QOS0,1,(uint8_t*)p);
+           ret = MQTTMsgPublish2dp(MQTT_Socket,QOS0,TopicType3,(uint8_t*)p);
            if(ret >= 0)
            {
                //表明有数据交换

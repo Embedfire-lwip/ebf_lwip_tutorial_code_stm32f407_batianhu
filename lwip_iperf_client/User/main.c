@@ -118,6 +118,18 @@ static void AppTaskCreate(void)
 
   iperf_client_init();
   
+  printf("本例程对使用jperf软件对开发板进行测试发送速度\n\n");
+  
+  printf("网络连接模型如下：\n\t 电脑<--网线-->路由<--网线-->开发板\n\n");
+  
+  printf("实验中使用TCP协议传输数据，电脑作为TCP Server ，开发板作为TCP Client\n\n");
+  
+  printf("本例程的IP地址均在User/arch/sys_arch.h文件中修改\n\n");
+    
+  printf("本例程参考<<LwIP应用实战开发指南>>第18章 使用 JPerf 工具测试网速\n\n");
+   
+  printf("打开jperf软件，电脑端选择Server,选择对应的端口号,然后开始测速\n\n");  
+  
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建Test1_Task任务 */
