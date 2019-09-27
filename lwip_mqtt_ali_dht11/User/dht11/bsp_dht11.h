@@ -34,4 +34,4 @@ void DHT11_Init( void );
 uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef * DHT11_Data);
 
 #endif /* __ONEWIRE_DHT11_H__ */
-/******************* (C) COPYRIGHT 2015-2020 硬石嵌入式开发团队 *****END OF FILE****/
+

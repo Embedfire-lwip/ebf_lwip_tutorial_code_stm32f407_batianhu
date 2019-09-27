@@ -80,7 +80,7 @@ void TCP_Client_Init(void)
   /* 创建一个TCP控制块  */
   client_pcb = tcp_new();	  
 
-  IP4_ADDR(&server_ip, 192,168,0,181);
+  IP4_ADDR(&server_ip, DEST_IP_ADDR0,DEST_IP_ADDR1,DEST_IP_ADDR2,DEST_IP_ADDR3);
 
   printf("client start connect!\n");
   
