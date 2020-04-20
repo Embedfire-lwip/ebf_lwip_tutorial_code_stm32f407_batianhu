@@ -43,25 +43,13 @@
 #define IP_ADDR        "114.215.151.106"
 
 #ifdef    LWIP_DNS
-#define   HOST_NAME       "www.firebbs.cn"     //www.lighttpd.net"
+#define   HOST_NAME       "embedfire.com"     
 #else
 #define   HOST_NAME       "114.215.151.106"     //
 #endif
 
 
-
-uint8_t get_buf[]= "GET /forum.php HTTP/1.1\r\nHost: www.firebbs.cn \r\n\r\n\r\n\r\n";
-
-
-
-uint8_t post_buf[]= 
-"POST /search.php?mod=forum&amp; \
-searchid=107300&amp; \
-orderby=lastpost&amp; \
-ascdesc=desc&amp; \
-searchsubmit=yes&amp; \
-kw=dwt HTTP/1.1 \r\n \
-Host: www.firebbs.cn \r\n\r\n\r\n\r\n ";
+uint8_t get_buf[]= "GET / HTTP/1.1\r\nHost: embedfire.com\r\n\r\n\r\n\r\n";
 
 
 static void client(void *thread_param)
